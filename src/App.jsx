@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 let introPlayedInThisVisit = false;
@@ -11,7 +11,10 @@ const projects = [
     description:
       "AI-powered accounting web app for tracking sales and purchase data, built using AI-assisted development tools.",
     image: "/noma.png",
-    href: "https://github.com/Zakria774/Noma-AI-Powered-Financial-Dashboard-Hackathon-Project-.git",
+    github:
+      "https://github.com/Zakria774/Noma-AI-Powered-Financial-Dashboard-Hackathon-Project-.git",
+    details:
+      "Noma is an AI-powered financial dashboard created during Micathon. It helps manage accounting workflows, visualize transactions, and simplify financial tracking through a clean interface.",
   },
   {
     number: "02",
@@ -20,7 +23,9 @@ const projects = [
     description:
       "Advanced calculator supporting trigonometry, logarithms, and complex mathematical expressions.",
     image: "/calc.png",
-    href: "https://github.com/Zakria774/CS101-project.git",
+    github: "https://github.com/Zakria774/CS101-project.git",
+    details:
+      "A scientific calculator built for mathematical computation with support for advanced operations and expression handling.",
   },
   {
     number: "03",
@@ -29,11 +34,40 @@ const projects = [
     description:
       "In-progress racing game applying OOP concepts, player movement, collision detection, and modular design.",
     image: "/race.png",
-    href: "#",
+    github: "#",
+    details:
+      "A C++ racing game focused on object-oriented programming concepts, collision mechanics, and gameplay systems.",
   },
 ];
 
+const skills = ["Python", "C++", "AI Systems", "Automation", "React", "JavaScript"];
+
+function assertProjectDataIsValid(items) {
+  return items.every(
+    (project) =>
+      project.number &&
+      project.type &&
+      project.title &&
+      project.description &&
+      project.image &&
+      typeof project.github === "string" &&
+      project.details
+  );
+}
+
+function assertSkillsAreValid(items) {
+  return Array.isArray(items) && items.length > 0 && items.every(Boolean);
+}
+
+console.assert(
+  assertProjectDataIsValid(projects),
+  "Each project must include number, type, title, description, image, github, and details."
+);
+
+console.assert(assertSkillsAreValid(skills), "Skills must be a non-empty list.");
+
 export default function MZPortfolioIntro() {
+  const [selectedProject, setSelectedProject] = useState(null);
   const introRef = useRef(null);
   const fullNameRef = useRef(null);
   const mzRef = useRef(null);
@@ -158,10 +192,10 @@ export default function MZPortfolioIntro() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-white text-black">
+    <div className="relative min-h-screen bg-[#f5f5f2] text-black">
       <div
         ref={introRef}
-        className="fixed inset-0 z-30 flex items-center justify-center bg-white"
+        className="fixed inset-0 z-30 flex items-center justify-center bg-[#f5f5f2]"
       >
         <h1
           ref={fullNameRef}
@@ -180,100 +214,82 @@ export default function MZPortfolioIntro() {
 
       <section
         ref={dashboardRef}
-        className="min-h-screen bg-white p-4 opacity-0 sm:p-6 lg:p-10"
+        className="min-h-screen bg-[#f5f5f2] p-4 opacity-0 sm:p-6 lg:p-10"
       >
         <div
           ref={cardRef}
-          className="relative mx-auto flex min-h-[88vh] w-full max-w-[1500px] flex-col rounded-[28px] bg-[#f7f6f3] text-black opacity-0 shadow-2xl ring-1 ring-black/10"
+          className="relative mx-auto flex min-h-[88vh] w-full max-w-[1500px] flex-col rounded-[28px] bg-white text-black opacity-0 shadow-[0_10px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5"
         >
-          <nav className="flex h-20 items-center justify-between border-b border-black/10 px-6 sm:px-10 lg:px-12">
-            <div className="text-2xl font-black tracking-[-0.05em]">MZ</div>
+          <nav className="sticky top-4 z-20 mx-4 mt-4 flex h-16 items-center justify-between rounded-full border border-black/10 bg-black px-5 text-white shadow-xl shadow-black/10 sm:mx-6 sm:px-8 lg:mx-10">
+            <a href="#home" className="text-2xl font-black tracking-[-0.05em]">
+              MZ
+            </a>
 
-            <div className="hidden items-center gap-10 text-sm font-medium md:flex">
-              <a className="transition hover:opacity-50" href="#works">
-                Works
+            <div className="hidden items-center gap-7 text-xs font-medium uppercase tracking-wide md:flex">
+              <a className="transition hover:text-white/50" href="#home">
+                Home
               </a>
-              <a className="transition hover:opacity-50" href="#about">
+              <a className="transition hover:text-white/50" href="#works">
+                Projects
+              </a>
+              <a className="transition hover:text-white/50" href="#about">
                 About
               </a>
-              <a className="transition hover:opacity-50" href="#services">
-                Services
+              <a className="transition hover:text-white/50" href="#skills">
+                Skills
               </a>
-              <a className="transition hover:opacity-50" href="#contact">
+              <a className="transition hover:text-white/50" href="#contact">
                 Contact
-              </a>
-              <a
-                className="rounded-full border border-black/15 px-5 py-2 transition hover:bg-black hover:text-white"
-                href="/cv.pdf"
-                download
-              >
-                Download CV
               </a>
             </div>
 
-            <button
-              className="h-4 w-4 rounded-full bg-black transition hover:scale-125"
-              aria-label="Theme button"
-            />
+            <a
+              className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-black transition hover:bg-white/80"
+              href="/cv.pdf"
+              download
+            >
+              Download CV
+            </a>
           </nav>
 
-          <main className="grid flex-1 grid-cols-1 gap-8 px-6 py-8 sm:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-12 lg:py-10">
-            <section className="flex flex-col justify-center">
-              <p className="mb-4 text-sm font-medium uppercase tracking-wide">
-                Hi, I’m
+          <main
+            id="home"
+            className="flex flex-1 scroll-mt-28 items-center px-6 py-20 sm:px-10 lg:px-12 lg:py-28"
+          >
+            <section className="max-w-5xl">
+              <p className="mb-6 text-sm font-medium uppercase tracking-[0.3em] text-black/40">
+                AI • AUTOMATION • SYSTEMS
               </p>
 
-              <h2 className="text-[19vw] font-black leading-[0.82] tracking-[-0.09em] sm:text-[15vw] lg:text-[8.6vw]">
+              <h2 className="text-[18vw] font-black leading-[0.82] tracking-[-0.1em] sm:text-[14vw] lg:text-[8vw]">
                 M ZAKRIA
               </h2>
 
-              <p className="mt-8 max-w-3xl text-2xl font-medium uppercase leading-tight tracking-[-0.04em] sm:text-3xl lg:text-[2.1rem]">
-                AI-focused Computer Science student building intelligent systems
-                and web products
+              <p className="mt-10 max-w-3xl text-xl font-medium uppercase leading-tight tracking-[-0.04em] text-black/70 sm:text-2xl lg:text-[2rem]">
+                Computer Science student building intelligent systems,
+                automation tools, and modern digital experiences.
               </p>
 
-              <div className="my-9 h-px max-w-xl bg-black/10" />
+              <div className="mt-14 flex flex-wrap items-center gap-4">
+                
 
-              <p className="max-w-xl text-base leading-relaxed text-black/60 sm:text-lg">
-                Passionate about AI, automation, and research-driven solutions
-                that create real-world impact.
-              </p>
-            </section>
-
-            <section className="flex flex-col items-center justify-center gap-6 lg:items-end">
-              {/* CV BOX */}
-              <div className="w-[120px] h-[120px] rounded-xl border border-black/15 flex flex-col items-center justify-center bg-white shadow-sm">
-                <span className="text-lg font-bold tracking-wide">MY CV</span>
                 <a
-                  href="/cv.pdf"
-                  download
-                  className="mt-2 text-xs uppercase tracking-wide border border-black/20 px-3 py-1 rounded-full transition hover:bg-black hover:text-white"
+                  href="#works"
+                  className="text-sm uppercase tracking-wide text-black/40 transition hover:text-black"
                 >
-                  Download
+                  View Projects ↓
                 </a>
-              </div>
-
-              {/* IMAGE */}
-              <div className="relative aspect-[4/5] w-full max-w-[390px] overflow-hidden rounded-2xl bg-neutral-300 shadow-sm">
-                <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/20" />
-                <div className="flex h-full w-full items-center justify-center px-8 text-center text-lg font-medium text-black/40">
-                  Add Your Photo Here
-                </div>
-
-                <div className="absolute bottom-5 left-5 rounded-full bg-white/75 px-4 py-2 text-xs font-medium uppercase tracking-wide backdrop-blur">
-                  AI / Automation / Web
-                </div>
               </div>
             </section>
           </main>
 
           <section
             id="works"
-            className="border-t border-black/10 px-6 py-8 sm:px-10 lg:px-12"
+            className="scroll-mt-28 border-t border-black/10 px-6 py-8 sm:px-10 lg:px-12"
           >
             <div className="mb-7 flex items-end justify-between gap-6">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-black/50">
+                <p className="text-xs font-medium uppercase tracking-wide text-black/40">
                   Selected Work
                 </p>
                 <h3 className="mt-2 text-3xl font-black tracking-[-0.05em] sm:text-4xl">
@@ -287,12 +303,12 @@ export default function MZPortfolioIntro() {
 
             <div className="flex flex-col gap-6">
               {projects.map((project) => (
-                <a
+                <button
                   key={project.number}
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group relative min-h-[230px] overflow-hidden rounded-2xl border border-black/10 bg-white/50 p-6 transition duration-500 hover:-translate-y-1 hover:shadow-2xl"
+                  type="button"
+                  onMouseEnter={() => setSelectedProject(project)}
+                  onMouseLeave={() => setSelectedProject(null)}
+                  className="group relative min-h-[180px] w-full overflow-hidden rounded-2xl border border-black/5 bg-[#fafaf8] p-6 text-left transition duration-500 hover:-translate-y-1 hover:shadow-2xl"
                 >
                   <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
                     <img
@@ -300,11 +316,11 @@ export default function MZPortfolioIntro() {
                       alt={project.title}
                       className="h-full w-full scale-110 object-cover transition duration-700 group-hover:scale-100"
                     />
-                    <div className="absolute inset-0 bg-black/55" />
+                    <div className="absolute inset-0 bg-black/35" />
                   </div>
 
                   <div className="relative z-10 flex h-full min-h-[180px] flex-col justify-between">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-wide text-black/40 transition group-hover:text-white/70">
+                    <div className="flex items-center justify-between text-xs uppercase tracking-wide text-black/40 transition group-hover:text-white/80">
                       <span>{project.type}</span>
                       <span>{project.number}</span>
                     </div>
@@ -313,77 +329,155 @@ export default function MZPortfolioIntro() {
                       <h4 className="text-3xl font-black tracking-[-0.04em] transition duration-300 group-hover:scale-[1.02] group-hover:text-white sm:text-5xl">
                         {project.title}
                       </h4>
-                      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-black/70 transition group-hover:text-white/85 sm:text-base">
-                        {project.description}
-                      </p>
+                      
                     </div>
                   </div>
-                </a>
+                </button>
               ))}
             </div>
           </section>
 
           <section
             id="about"
-            className="grid grid-cols-1 gap-8 border-t border-black/10 px-6 py-8 sm:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:px-12"
+            className="scroll-mt-28 grid grid-cols-1 gap-8 border-t border-black/10 px-6 py-10 sm:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:px-12"
           >
             <div>
-              <p className="text-xl font-bold uppercase tracking-wide text-black mb-2">
+              <p className="mb-2 text-xl font-bold uppercase tracking-wide text-black">
                 About
               </p>
               <h3 className="mt-2 text-3xl font-black tracking-[-0.05em]">
                 Research-driven builder
               </h3>
             </div>
-            <div className="space-y-6 text-base leading-relaxed text-black/65 sm:text-lg">
+
+            <div className="space-y-6 text-base leading-relaxed text-black/60 sm:text-lg">
               <p>
                 I’m a Computer Science student passionate about AI, automation,
                 and intelligent systems, with a strong focus on research-driven
                 solutions that create real-world impact.
               </p>
-              <div className="flex flex-wrap gap-3 text-sm font-medium text-black">
-                <span className="rounded-full border border-black/10 px-4 py-2">
-                  Python
-                </span>
-                <span className="rounded-full border border-black/10 px-4 py-2">
-                  C++
-                </span>
-                <span className="rounded-full border border-black/10 px-4 py-2">
-                  AI Systems
-                </span>
-                <span className="rounded-full border border-black/10 px-4 py-2">
-                  Automation
-                </span>
-              </div>
             </div>
           </section>
 
-          <footer id="contact" className="px-6 pb-8 sm:px-10 lg:px-12">
+          <section
+            id="skills"
+            className="scroll-mt-28 border-t border-black/10 px-6 py-10 sm:px-10 lg:px-12"
+          >
+            <div className="mb-8">
+              <p className="mb-2 text-xl font-bold uppercase tracking-wide text-black">
+                What I Know
+              </p>
+              <h3 className="text-3xl font-black tracking-[-0.05em]">
+                Skills & Technologies
+              </h3>
+            </div>
+
+            <div className="flex flex-wrap gap-4 text-sm font-medium text-black sm:text-base">
+              {skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="rounded-full border border-black/10 px-5 py-3"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          <footer
+            id="contact"
+            className="scroll-mt-28 px-6 pb-8 sm:px-10 lg:px-12"
+          >
             <div className="flex flex-col gap-5 border-t border-black/10 pt-7 text-xs font-medium uppercase tracking-wide sm:flex-row sm:items-center sm:justify-between sm:text-sm">
               <div className="flex flex-wrap gap-5">
                 <a
-                  className="transition hover:opacity-50"
-                  href="mailto:zakriamuhmmad07@gmail.com"
+                  className="group relative min-w-[170px] transition hover:opacity-100"
+                  href="mailto:zakriamuhmmad07@gmail.com,zakriamuhmmad07@icloud.com"
                 >
-                  Email ↗
+                  <span className="transition group-hover:opacity-0">
+                    Email ↗
+                  </span>
+                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                    zakriamuhmmad07
+                  </span>
                 </a>
-                <a className="transition hover:opacity-50" href="#">
-                  LinkedIn ↗
-                </a>
-                <a className="transition hover:opacity-50" href="#">
-                  GitHub ↗
-                </a>
+
                 <a
-                  className="rounded-full border border-black/15 px-4 py-2 transition hover:bg-black hover:text-white"
-                  href="/cv.pdf"
-                  download
+                  className="group relative min-w-[170px] transition hover:opacity-100"
+                  href="https://www.linkedin.com/in/muhammad-zakria-382640403?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  Download CV ↓
+                  <span className="transition group-hover:opacity-0">
+                    LinkedIn ↗
+                  </span>
+                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                    Muhammad Zakria
+                  </span>
                 </a>
+
+                <a
+                  className="group relative min-w-[170px] transition hover:opacity-100"
+                  href="https://github.com/Zakria774"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span className="transition group-hover:opacity-0">
+                    GitHub ↗
+                  </span>
+                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                    Zakria774
+                  </span>
+                </a>
+
+                
               </div>
               <span>Scroll to explore ↓</span>
             </div>
           </footer>
+
+          {selectedProject && (
+            <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-6">
+              <div className="relative w-full max-w-4xl rounded-[28px] border border-black/10 bg-white p-8 shadow-2xl">
+                <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr]">
+                  <div className="overflow-hidden rounded-2xl border border-black/10">
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-center">
+                    <p className="text-xs uppercase tracking-[0.3em] text-black/40">
+                      {selectedProject.type}
+                    </p>
+
+                    <h2 className="mt-3 text-5xl font-black tracking-[-0.06em]">
+                      {selectedProject.title}
+                    </h2>
+
+                    <p className="mt-6 text-base leading-relaxed text-black/60">
+                      {selectedProject.details}
+                    </p>
+
+                    <div className="mt-10 flex flex-wrap gap-4">
+                      {selectedProject.github !== "#" && (
+                        <a
+                          href={selectedProject.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="pointer-events-auto rounded-full bg-black px-6 py-3 text-sm uppercase tracking-wide text-white transition hover:bg-black/80"
+                        >
+                          View GitHub
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
