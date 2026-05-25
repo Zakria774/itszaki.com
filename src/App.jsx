@@ -33,7 +33,7 @@ const projects = [
     title: "2D Racing Game",
     description:
       "In-progress racing game applying OOP concepts, player movement, collision detection, and modular design.",
-    image: "/race.png",
+    image: "/race_new.png",
     github: "#",
     details:
       "A C++ racing game focused on object-oriented programming concepts, collision mechanics, and gameplay systems.",
