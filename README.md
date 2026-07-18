@@ -1,18 +1,24 @@
-# React + Vite
+# MZ Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+My personal portfolio website showcasing my projects, skills, background, and interests in AI, automation, and intelligent systems.
 
-Currently, two official plugins are available:
+Live site: https://itszaki.com
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Animated intro
+- Minimal responsive design
+- Project previews
+- About and skills sections
+- Contact links
+- Downloadable CV
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Built With
 
-Note: This will impact Vite dev & build performances.
+React, Vite, Tailwind CSS, GSAP, and GitHub Pages.
 
-## Expanding the ESLint configuration
+## Run Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
