@@ -42,6 +42,14 @@ const projects = [
 
 const skills = ["Python", "C++", "AI Systems", "Automation", "React", "JavaScript"];
 
+const navLinks = [
+  { href: "#home", label: "Home" },
+  { href: "#works", label: "Projects" },
+  { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
+  { href: "#contact", label: "Contact" },
+];
+
 function assertProjectDataIsValid(items) {
   return items.every(
     (project) =>
@@ -59,20 +67,24 @@ function assertSkillsAreValid(items) {
   return Array.isArray(items) && items.length > 0 && items.every(Boolean);
 }
 
-console.assert(
-  assertProjectDataIsValid(projects),
-  "Each project must include number, type, title, description, image, github, and details."
-);
-
-console.assert(assertSkillsAreValid(skills), "Skills must be a non-empty list.");
+// Only run these checks in development — no reason to spend cycles on them in production.
+if (import.meta.env.DEV) {
+  console.assert(
+    assertProjectDataIsValid(projects),
+    "Each project must include number, type, title, description, image, github, and details."
+  );
+  console.assert(assertSkillsAreValid(skills), "Skills must be a non-empty list.");
+}
 
 export default function MZPortfolioIntro() {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const introRef = useRef(null);
   const fullNameRef = useRef(null);
   const mzRef = useRef(null);
   const dashboardRef = useRef(null);
   const cardRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     const hasPlayedIntro = introPlayedInThisVisit;
@@ -191,6 +203,34 @@ export default function MZPortfolioIntro() {
     return () => tl.kill();
   }, []);
 
+  // Close the modal when clicking outside it, or pressing Escape.
+  useEffect(() => {
+    if (!selectedProject) return undefined;
+
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setSelectedProject(null);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setSelectedProject(null);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedProject]);
+
+  // Close mobile nav whenever a link is tapped.
+  const handleNavLinkClick = () => setMobileNavOpen(false);
+
   return (
     <div className="relative min-h-screen bg-[#f5f5f2] text-black">
       <div
@@ -220,36 +260,81 @@ export default function MZPortfolioIntro() {
           ref={cardRef}
           className="relative mx-auto flex min-h-[88vh] w-full max-w-[1500px] flex-col rounded-[28px] bg-white text-black opacity-0 shadow-[0_10px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5"
         >
-          <nav className="sticky top-4 z-20 mx-4 mt-4 flex h-16 items-center justify-between rounded-full border border-black/10 bg-black px-5 text-white shadow-xl shadow-black/10 sm:mx-6 sm:px-8 lg:mx-10">
-            <a href="#home" className="text-2xl font-black tracking-[-0.05em]">
-              MZ
-            </a>
+          <nav className="sticky top-4 z-20 mx-4 mt-4 rounded-full border border-black/10 bg-black text-white shadow-xl shadow-black/10 sm:mx-6 lg:mx-10">
+            <div className="flex h-16 items-center justify-between px-5 sm:px-8">
+              <a href="#home" className="text-2xl font-black tracking-[-0.05em]">
+                MZ
+              </a>
 
-            <div className="hidden items-center gap-7 text-xs font-medium uppercase tracking-wide md:flex">
-              <a className="transition hover:text-white/50" href="#home">
-                Home
-              </a>
-              <a className="transition hover:text-white/50" href="#works">
-                Projects
-              </a>
-              <a className="transition hover:text-white/50" href="#about">
-                About
-              </a>
-              <a className="transition hover:text-white/50" href="#skills">
-                Skills
-              </a>
-              <a className="transition hover:text-white/50" href="#contact">
-                Contact
-              </a>
+              <div className="hidden items-center gap-7 text-xs font-medium uppercase tracking-wide md:flex">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    className="transition hover:text-white/50"
+                    href={link.href}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <a
+                  className="hidden rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-black transition hover:bg-white/80 sm:block"
+                  href="/cv.pdf"
+                  download
+                >
+                  Download CV
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileNavOpen((open) => !open)}
+                  aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={mobileNavOpen}
+                  className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-full border border-white/20 md:hidden"
+                >
+                  <span
+                    className={`h-0.5 w-4 bg-white transition-transform ${
+                      mobileNavOpen ? "translate-y-2 rotate-45" : ""
+                    }`}
+                  />
+                  <span
+                    className={`h-0.5 w-4 bg-white transition-opacity ${
+                      mobileNavOpen ? "opacity-0" : ""
+                    }`}
+                  />
+                  <span
+                    className={`h-0.5 w-4 bg-white transition-transform ${
+                      mobileNavOpen ? "-translate-y-2 -rotate-45" : ""
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
-            <a
-              className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-black transition hover:bg-white/80"
-              href="/cv.pdf"
-              download
-            >
-              Download CV
-            </a>
+            {mobileNavOpen && (
+              <div className="flex flex-col gap-1 border-t border-white/10 px-5 pb-4 pt-3 text-sm font-medium uppercase tracking-wide md:hidden">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleNavLinkClick}
+                    className="rounded-lg px-2 py-2 transition hover:bg-white/10"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <a
+                  href="/cv.pdf"
+                  download
+                  onClick={handleNavLinkClick}
+                  className="mt-2 rounded-full bg-white px-4 py-2 text-center text-xs font-bold text-black"
+                >
+                  Download CV
+                </a>
+              </div>
+            )}
           </nav>
 
           <main
@@ -271,8 +356,6 @@ export default function MZPortfolioIntro() {
               </p>
 
               <div className="mt-14 flex flex-wrap items-center gap-4">
-                
-
                 <a
                   href="#works"
                   className="text-sm uppercase tracking-wide text-black/40 transition hover:text-black"
@@ -306,14 +389,19 @@ export default function MZPortfolioIntro() {
                 <button
                   key={project.number}
                   type="button"
-                  onMouseEnter={() => setSelectedProject(project)}
-                  onMouseLeave={() => setSelectedProject(null)}
+                  onClick={() =>
+                    setSelectedProject((current) =>
+                      current?.number === project.number ? null : project
+                    )
+                  }
+                  aria-expanded={selectedProject?.number === project.number}
                   className="group relative min-h-[180px] w-full overflow-hidden rounded-2xl border border-black/5 bg-[#fafaf8] p-6 text-left transition duration-500 hover:-translate-y-1 hover:shadow-2xl"
                 >
                   <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
                     <img
                       src={project.image}
                       alt={project.title}
+                      loading="lazy"
                       className="h-full w-full scale-110 object-cover transition duration-700 group-hover:scale-100"
                     />
                     <div className="absolute inset-0 bg-black/35" />
@@ -329,7 +417,6 @@ export default function MZPortfolioIntro() {
                       <h4 className="text-3xl font-black tracking-[-0.04em] transition duration-300 group-hover:scale-[1.02] group-hover:text-white sm:text-5xl">
                         {project.title}
                       </h4>
-                      
                     </div>
                   </div>
                 </button>
@@ -392,7 +479,7 @@ export default function MZPortfolioIntro() {
               <div className="flex flex-wrap gap-5">
                 <a
                   className="group relative min-w-[170px] transition hover:opacity-100"
-                  href="mailto:zakriamuhmmad07@gmail.com,zakriamuhmmad07@icloud.com"
+                  href="mailto:zakriamuhmmad07@gmail.com"
                 >
                   <span className="transition group-hover:opacity-0">
                     Email ↗
@@ -429,21 +516,32 @@ export default function MZPortfolioIntro() {
                     Zakria774
                   </span>
                 </a>
-
-                
               </div>
               <span>Scroll to explore ↓</span>
             </div>
           </footer>
 
           {selectedProject && (
-            <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-6">
-              <div className="relative w-full max-w-4xl rounded-[28px] border border-black/10 bg-white p-8 shadow-2xl">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-6">
+              <div
+                ref={modalRef}
+                className="relative w-full max-w-4xl rounded-[28px] border border-black/10 bg-white p-8 shadow-2xl"
+              >
+                <button
+                  type="button"
+                  onClick={() => setSelectedProject(null)}
+                  aria-label="Close project details"
+                  className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-lg leading-none transition hover:bg-black/5"
+                >
+                  ×
+                </button>
+
                 <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr]">
                   <div className="overflow-hidden rounded-2xl border border-black/10">
                     <img
                       src={selectedProject.image}
                       alt={selectedProject.title}
+                      loading="lazy"
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -467,7 +565,7 @@ export default function MZPortfolioIntro() {
                           href={selectedProject.github}
                           target="_blank"
                           rel="noreferrer"
-                          className="pointer-events-auto rounded-full bg-black px-6 py-3 text-sm uppercase tracking-wide text-white transition hover:bg-black/80"
+                          className="rounded-full bg-black px-6 py-3 text-sm uppercase tracking-wide text-white transition hover:bg-black/80"
                         >
                           View GitHub
                         </a>
