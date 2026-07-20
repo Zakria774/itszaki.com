@@ -41,6 +41,17 @@ const projects = [
     details:
       "A C++ racing game focused on object-oriented programming concepts, collision mechanics, and gameplay systems.",
   },
+  {
+    number: "04",
+    type: "AI Automation",
+    title: "AI Travel Planner",
+    description:
+      "A Python tool that scrapes flights and hotels with Playwright, then uses the Groq LLM to recommend the best full itinerary.",
+    image: "/travel-planner.svg",
+    github: "https://github.com/Zakria774/AI-travel-planner.git",
+    details:
+      "AI Travel Planner automates trip research end to end. It scrapes live flight options from Google Flights and hotel listings from Booking.com using Playwright, then feeds everything to the Groq API, which weighs price, travel time, hotel quality, and location to recommend the best complete itinerary.",
+  },
 ];
 
 const skills = ["Python", "C++", "AI Systems", "AI Automation", "Playwright", "Linux"];
@@ -446,7 +457,7 @@ export default function MZPortfolioIntro() {
                 </h3>
               </div>
               <span className="hidden text-sm uppercase tracking-wide text-black/40 sm:block">
-                03 Projects
+                04 Projects
               </span>
             </div>
 
