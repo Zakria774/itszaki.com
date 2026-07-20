@@ -13,7 +13,7 @@ const projects = [
     title: "Noma",
     description:
       "AI-powered accounting web app for tracking sales and purchase data, built using AI-assisted development tools.",
-    image: "/noma.png",
+    image: "/noma.svg",
     github:
       "https://github.com/Zakria774/Noma-AI-Powered-Financial-Dashboard-Hackathon-Project-.git",
     details:
@@ -36,7 +36,7 @@ const projects = [
     title: "2D Racing Game",
     description:
       "In-progress racing game applying OOP concepts, player movement, collision detection, and modular design.",
-    image: "/race_new.png",
+    image: "/racing-game.svg",
     github: "#",
     details:
       "A C++ racing game focused on object-oriented programming concepts, collision mechanics, and gameplay systems.",
