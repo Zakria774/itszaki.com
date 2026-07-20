@@ -25,7 +25,7 @@ const projects = [
     title: "Job Finder MCP",
     description:
       "A Model Context Protocol server that scrapes and recommends remote job listings for AI agents, built with Python and Playwright.",
-    image: "/job-finder-mcp.png",
+    image: "/job-finder-mcp.svg",
     github: "https://github.com/Zakria774/Job_Finder_mcp_docker",
     details:
       "Job Finder MCP connects AI assistants to real remote job listings through the Model Context Protocol. Built with Python and Playwright, it scrapes job boards behind the scenes and exposes a search tool so an LLM can find, compare, and recommend roles conversationally, no manual browsing required.",
