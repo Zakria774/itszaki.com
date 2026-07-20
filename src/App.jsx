@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 let introPlayedInThisVisit = false;
 
@@ -18,14 +21,14 @@ const projects = [
   },
   {
     number: "02",
-    type: "Semester Project",
-    title: "Scientific Calculator",
+    type: "MCP Server",
+    title: "Job Finder MCP",
     description:
-      "Advanced calculator supporting trigonometry, logarithms, and complex mathematical expressions.",
-    image: "/calc.png",
-    github: "https://github.com/Zakria774/CS101-project.git",
+      "A Model Context Protocol server that scrapes and recommends remote job listings for AI agents, built with Python and Playwright.",
+    image: "/job-finder-mcp.png",
+    github: "https://github.com/Zakria774/Job_Finder_mcp_docker",
     details:
-      "A scientific calculator built for mathematical computation with support for advanced operations and expression handling.",
+      "Job Finder MCP connects AI assistants to real remote job listings through the Model Context Protocol. Built with Python and Playwright, it scrapes job boards behind the scenes and exposes a search tool so an LLM can find, compare, and recommend roles conversationally, no manual browsing required.",
   },
   {
     number: "03",
@@ -40,7 +43,7 @@ const projects = [
   },
 ];
 
-const skills = ["Python", "C++", "AI Systems", "Automation", "React", "JavaScript"];
+const skills = ["Python", "C++", "AI Systems", "AI Automation", "Playwright", "Linux"];
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -85,6 +88,10 @@ export default function MZPortfolioIntro() {
   const dashboardRef = useRef(null);
   const cardRef = useRef(null);
   const modalRef = useRef(null);
+  const timelineRef = useRef(null);
+  const progressLineRef = useRef(null);
+  const projectRefs = useRef([]);
+  const dotRefs = useRef([]);
 
   useEffect(() => {
     const hasPlayedIntro = introPlayedInThisVisit;
@@ -203,6 +210,65 @@ export default function MZPortfolioIntro() {
     return () => tl.kill();
   }, []);
 
+  // Animate the project timeline as the user scrolls: the center line draws
+  // downward, each project card fades/slides in, and its node lights up violet.
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (progressLineRef.current && timelineRef.current) {
+        gsap.to(progressLineRef.current, {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 65%",
+            end: "bottom 75%",
+            scrub: 0.6,
+          },
+        });
+      }
+
+      projectRefs.current.forEach((el) => {
+        if (!el) return;
+        gsap.fromTo(
+          el,
+          { autoAlpha: 0, y: 50 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+      dotRefs.current.forEach((el) => {
+        if (!el) return;
+        gsap.fromTo(
+          el,
+          { backgroundColor: "rgba(0,0,0,0.15)", scale: 1 },
+          {
+            backgroundColor: "#7C3AED",
+            scale: 1.4,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   // Close the modal when clicking outside it, or pressing Escape.
   useEffect(() => {
     if (!selectedProject) return undefined;
@@ -232,10 +298,10 @@ export default function MZPortfolioIntro() {
   const handleNavLinkClick = () => setMobileNavOpen(false);
 
   return (
-    <div className="relative min-h-screen bg-[#f5f5f2] text-black">
+    <div className="relative min-h-screen bg-[#f5efe0] text-black">
       <div
         ref={introRef}
-        className="fixed inset-0 z-30 flex items-center justify-center bg-[#f5f5f2]"
+        className="fixed inset-0 z-30 flex items-center justify-center bg-[#f5efe0]"
       >
         <h1
           ref={fullNameRef}
@@ -254,7 +320,7 @@ export default function MZPortfolioIntro() {
 
       <section
         ref={dashboardRef}
-        className="min-h-screen bg-[#f5f5f2] p-4 opacity-0 sm:p-6 lg:p-10"
+        className="min-h-screen bg-[#f5efe0] p-4 opacity-0 sm:p-6 lg:p-10"
       >
         <div
           ref={cardRef}
@@ -295,8 +361,8 @@ export default function MZPortfolioIntro() {
                   className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-full border border-white/20 md:hidden"
                 >
                   <span
-                    className={`h-0.5 w-4 bg-white transition-transform ${
-                      mobileNavOpen ? "translate-y-2 rotate-45" : ""
+                    className={`h-0.5 w-4 transition-transform ${
+                      mobileNavOpen ? "translate-y-2 rotate-45 bg-violet-400" : "bg-white"
                     }`}
                   />
                   <span
@@ -305,8 +371,8 @@ export default function MZPortfolioIntro() {
                     }`}
                   />
                   <span
-                    className={`h-0.5 w-4 bg-white transition-transform ${
-                      mobileNavOpen ? "-translate-y-2 -rotate-45" : ""
+                    className={`h-0.5 w-4 transition-transform ${
+                      mobileNavOpen ? "-translate-y-2 -rotate-45 bg-violet-400" : "bg-white"
                     }`}
                   />
                 </button>
@@ -342,7 +408,7 @@ export default function MZPortfolioIntro() {
             className="flex flex-1 scroll-mt-28 items-center px-6 py-20 sm:px-10 lg:px-12 lg:py-28"
           >
             <section className="max-w-5xl">
-              <p className="mb-6 text-sm font-medium uppercase tracking-[0.3em] text-black/40">
+              <p className="mb-6 text-sm font-medium uppercase tracking-[0.3em] text-violet-600">
                 AI • AUTOMATION • SYSTEMS
               </p>
 
@@ -358,7 +424,7 @@ export default function MZPortfolioIntro() {
               <div className="mt-14 flex flex-wrap items-center gap-4">
                 <a
                   href="#works"
-                  className="text-sm uppercase tracking-wide text-black/40 transition hover:text-black"
+                  className="text-sm uppercase tracking-wide text-black/40 transition hover:text-violet-600"
                 >
                   View Projects ↓
                 </a>
@@ -384,43 +450,71 @@ export default function MZPortfolioIntro() {
               </span>
             </div>
 
-            <div className="flex flex-col gap-6">
-              {projects.map((project) => (
-                <button
-                  key={project.number}
-                  type="button"
-                  onClick={() =>
-                    setSelectedProject((current) =>
-                      current?.number === project.number ? null : project
-                    )
-                  }
-                  aria-expanded={selectedProject?.number === project.number}
-                  className="group relative min-h-[180px] w-full overflow-hidden rounded-2xl border border-black/5 bg-[#fafaf8] p-6 text-left transition duration-500 hover:-translate-y-1 hover:shadow-2xl"
-                >
-                  <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      className="h-full w-full scale-110 object-cover transition duration-700 group-hover:scale-100"
-                    />
-                    <div className="absolute inset-0 bg-black/35" />
-                  </div>
+            <div ref={timelineRef} className="relative py-6">
+              <div className="pointer-events-none absolute inset-y-0 left-6 w-px bg-black/10 md:left-1/2" />
+              <div
+                ref={progressLineRef}
+                className="pointer-events-none absolute inset-y-0 left-6 w-px origin-top scale-y-0 bg-violet-600 md:left-1/2"
+              />
 
-                  <div className="relative z-10 flex h-full min-h-[180px] flex-col justify-between">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-wide text-black/40 transition group-hover:text-white/80">
-                      <span>{project.type}</span>
-                      <span>{project.number}</span>
-                    </div>
+              <div className="flex flex-col gap-14">
+                {projects.map((project, i) => {
+                  const isEven = i % 2 === 0;
+                  return (
+                    <div
+                      key={project.number}
+                      className={`relative flex ${isEven ? "" : "md:justify-end"}`}
+                    >
+                      <span
+                        ref={(el) => (dotRefs.current[i] = el)}
+                        className="absolute left-6 top-8 z-10 h-3 w-3 -translate-x-1/2 rounded-full bg-black/15 md:left-1/2"
+                      />
 
-                    <div>
-                      <h4 className="text-3xl font-black tracking-[-0.04em] transition duration-300 group-hover:scale-[1.02] group-hover:text-white sm:text-5xl">
-                        {project.title}
-                      </h4>
+                      <div
+                        ref={(el) => (projectRefs.current[i] = el)}
+                        className={`w-full pl-16 opacity-0 md:w-1/2 md:pl-0 ${
+                          isEven ? "md:pr-16" : "md:pl-16"
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setSelectedProject((current) =>
+                              current?.number === project.number ? null : project
+                            )
+                          }
+                          aria-expanded={selectedProject?.number === project.number}
+                          className="group relative w-full overflow-hidden rounded-2xl border border-black/5 bg-[#faf5ea] text-left transition duration-500 hover:-translate-y-1 hover:shadow-2xl"
+                        >
+                          <div className="aspect-[16/9] w-full overflow-hidden bg-black/5">
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="p-5 sm:p-6">
+                            <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-wide">
+                              <span className="rounded-full border border-violet-600/40 px-3 py-1 text-violet-700">
+                                {project.type}
+                              </span>
+                              <span className="text-black/40">{project.number}</span>
+                            </div>
+                            <h4 className="text-2xl font-black tracking-[-0.04em] sm:text-3xl">
+                              {project.title}
+                            </h4>
+                            <p className="mt-2 text-sm leading-relaxed text-black/50">
+                              {project.description}
+                            </p>
+                          </div>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  );
+                })}
+              </div>
             </div>
           </section>
 
@@ -442,6 +536,14 @@ export default function MZPortfolioIntro() {
                 I’m a Computer Science student passionate about AI, automation,
                 and intelligent systems, with a strong focus on research-driven
                 solutions that create real-world impact.
+              </p>
+              <p>
+                Looking forward, I’m interested in research opportunities where
+                I can collaborate on cutting-edge AI projects, explore novel
+                intelligent systems, and contribute to impactful discoveries.
+                I enjoy combining technical rigor with creativity, and I’m
+                always seeking ways to learn, innovate, and make technology
+                meaningful.
               </p>
             </div>
           </section>
@@ -484,7 +586,7 @@ export default function MZPortfolioIntro() {
                   <span className="transition group-hover:opacity-0">
                     Email ↗
                   </span>
-                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
                     zakriamuhmmad07
                   </span>
                 </a>
@@ -498,7 +600,7 @@ export default function MZPortfolioIntro() {
                   <span className="transition group-hover:opacity-0">
                     LinkedIn ↗
                   </span>
-                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
                     Muhammad Zakria
                   </span>
                 </a>
@@ -512,7 +614,7 @@ export default function MZPortfolioIntro() {
                   <span className="transition group-hover:opacity-0">
                     GitHub ↗
                   </span>
-                  <span className="absolute left-0 top-0 opacity-0 transition group-hover:opacity-100">
+                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
                     Zakria774
                   </span>
                 </a>
@@ -547,7 +649,7 @@ export default function MZPortfolioIntro() {
                   </div>
 
                   <div className="flex flex-col justify-center">
-                    <p className="text-xs uppercase tracking-[0.3em] text-black/40">
+                    <p className="text-xs uppercase tracking-[0.3em] text-violet-600">
                       {selectedProject.type}
                     </p>
 
@@ -565,7 +667,7 @@ export default function MZPortfolioIntro() {
                           href={selectedProject.github}
                           target="_blank"
                           rel="noreferrer"
-                          className="rounded-full bg-black px-6 py-3 text-sm uppercase tracking-wide text-white transition hover:bg-black/80"
+                          className="rounded-full bg-violet-600 px-6 py-3 text-sm uppercase tracking-wide text-white transition hover:bg-violet-700"
                         >
                           View GitHub
                         </a>
