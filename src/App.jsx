@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Crosshair from "./components/Crosshair";
+import BorderGlow from "./components/BorderGlow";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -337,6 +339,8 @@ export default function MZPortfolioIntro() {
           ref={cardRef}
           className="relative mx-auto flex min-h-[88vh] w-full max-w-[1500px] flex-col rounded-[28px] bg-white text-black opacity-0 shadow-[0_10px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5"
         >
+          <Crosshair containerRef={cardRef} color="#7C3AED" />
+
           <nav className="sticky top-4 z-20 mx-4 mt-4 rounded-full border border-black/10 bg-black text-white shadow-xl shadow-black/10 sm:mx-6 lg:mx-10">
             <div className="flex h-16 items-center justify-between px-5 sm:px-8">
               <a href="#home" className="text-2xl font-black tracking-[-0.05em]">
@@ -416,16 +420,30 @@ export default function MZPortfolioIntro() {
 
           <main
             id="home"
-            className="flex flex-1 scroll-mt-28 items-center px-6 py-20 sm:px-10 lg:px-12 lg:py-28"
+            className="flex flex-1 scroll-mt-28 items-center justify-center px-6 py-20 sm:px-10 lg:px-12 lg:py-28"
           >
-            <section className="max-w-5xl">
+            <section className="flex max-w-5xl flex-col items-start">
               <p className="mb-6 text-sm font-medium uppercase tracking-[0.3em] text-violet-600">
                 AI • AUTOMATION • SYSTEMS
               </p>
 
-              <h2 className="text-[18vw] font-black leading-[0.82] tracking-[-0.1em] sm:text-[14vw] lg:text-[8vw]">
-                M ZAKRIA
-              </h2>
+              <div className="mb-10 flex w-full justify-center">
+                <BorderGlow
+                  backgroundColor="#faf5ea"
+                  glowColor="262 83 58"
+                  borderRadius={24}
+                  glowRadius={30}
+                  glowIntensity={1}
+                  coneSpread={25}
+                  colors={["#7C3AED", "#C4B5FD", "#4C1D95"]}
+                  className="px-12 py-10 sm:px-16 sm:py-14"
+                >
+                  <h2 className="text-center font-black uppercase leading-[0.85] tracking-[-0.05em] text-6xl sm:text-8xl lg:text-9xl">
+                    <span className="block">M</span>
+                    <span className="block">Zakria</span>
+                  </h2>
+                </BorderGlow>
+              </div>
 
               <p className="mt-10 max-w-3xl text-xl font-medium uppercase leading-tight tracking-[-0.04em] text-black/70 sm:text-2xl lg:text-[2rem]">
                 Computer Science student building intelligent systems,
