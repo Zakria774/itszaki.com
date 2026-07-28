@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <radialGradient id="bgGlow" cx="70%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#efe3ff" />
+      <stop offset="100%" stop-color="#faf5ea" />
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="800" height="450" fill="url(#bgGlow)" />
+
+  <!-- subtle dotted world-map grid -->
+  <g fill="#0a0a0a" opacity="0.06">
+    <circle cx="60" cy="60" r="2.5"/><circle cx="100" cy="60" r="2.5"/><circle cx="140" cy="60" r="2.5"/>
+    <circle cx="60" cy="100" r="2.5"/><circle cx="100" cy="100" r="2.5"/><circle cx="140" cy="100" r="2.5"/>
+    <circle cx="660" cy="380" r="2.5"/><circle cx="700" cy="380" r="2.5"/><circle cx="740" cy="380" r="2.5"/>
+    <circle cx="660" cy="340" r="2.5"/><circle cx="700" cy="340" r="2.5"/><circle cx="740" cy="340" r="2.5"/>
+  </g>
+
+  <!-- flight arc path -->
+  <path d="M 110 340 Q 400 120 690 200" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- origin pin -->
+  <g transform="translate(110,340)">
+    <circle r="9" fill="#7C3AED"/>
+    <circle r="4" fill="#faf5ea"/>
+  </g>
+
+  <!-- destination pin -->
+  <g transform="translate(690,200)">
+    <circle r="9" fill="#0a0a0a"/>
+    <circle r="4" fill="#faf5ea"/>
+  </g>
+
+  <!-- plane icon riding the arc -->
+  <g transform="translate(400,178) rotate(-18)">
+    <path d="M0 -14 L5 0 L26 6 L26 12 L5 8 L0 22 L-6 20 L-4 8 L-24 4 L-24 -2 L-4 -4 Z"
+          fill="#0a0a0a"/>
+  </g>
+
+  <!-- hotel / building card -->
+  <g transform="translate(560,300)">
+    <rect x="-46" y="-40" width="92" height="80" rx="14" fill="#ffffff" stroke="#0a0a0a" stroke-opacity="0.08"/>
+    <rect x="-28" y="-22" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.85"/>
+    <rect x="-6" y="-22" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.55"/>
+    <rect x="16" y="-22" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.3"/>
+    <rect x="-28" y="0" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.3"/>
+    <rect x="-6" y="0" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.55"/>
+    <rect x="16" y="0" width="14" height="14" rx="3" fill="#7C3AED" opacity="0.85"/>
+    <rect x="-10" y="20" width="20" height="14" rx="2" fill="#0a0a0a"/>
+  </g>
+
+  <!-- AI recommendation spark -->
+  <g transform="translate(230,150)">
+    <path d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="#7C3AED"/>
+  </g>
+  <g transform="translate(255,190)" opacity="0.6">
+    <path d="M0 -10 L3 -3 L10 0 L3 3 L0 10 L-3 3 L-10 0 L-3 -3 Z" fill="#7C3AED"/>
+  </g>
+
+  <!-- passport / itinerary card, bottom-left accent -->
+  <g transform="translate(150,120)">
+    <rect x="-34" y="-24" width="68" height="48" rx="8" fill="#0a0a0a"/>
+    <rect x="-24" y="-14" width="30" height="4" rx="2" fill="#faf5ea"/>
+    <rect x="-24" y="-4" width="46" height="3" rx="1.5" fill="#faf5ea" opacity="0.6"/>
+    <rect x="-24" y="4" width="46" height="3" rx="1.5" fill="#faf5ea" opacity="0.6"/>
+    <rect x="-24" y="12" width="30" height="3" rx="1.5" fill="#faf5ea" opacity="0.6"/>
+  </g>
+</svg>
