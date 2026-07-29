@@ -404,7 +404,7 @@ export default function MZPortfolioIntro() {
                   </a>
                 ))}
                 <a
-                  href="/cv.pdf"
+                  href="/Muhammad_Zakria_Resume.docx"
                   download
                   onClick={handleNavLinkClick}
                   className="mt-2 rounded-full bg-white px-4 py-2 text-center text-xs font-bold text-black"
