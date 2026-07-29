@@ -359,7 +359,7 @@ export default function MZPortfolioIntro() {
               <div className="flex items-center gap-3">
                 <a
                   className="hidden rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-black transition hover:bg-white/80 sm:block"
-                  href="/cv.pdf"
+                  href="/Muhammad_Zakria_Resume.docx"
                   download
                 >
                   Download CV
