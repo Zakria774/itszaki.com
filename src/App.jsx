@@ -55,10 +55,55 @@ const projects = [
   },
 ];
 
+const experiences = [
+  {
+    type: "Society",
+    role: "Event Organizer & Host",
+    org: "Nexus Society, GIK Institute",
+    date: "October 2026",
+    description:
+      "Managed and hosted a cybersecurity event for the society, with almost 50 participants.",
+    highlights: [
+      "Organized the event in a team of two",
+      "Demonstrated Linux and WiFi hacking to the participants",
+      "Hosted a mystery-solving game to keep the audience involved",
+    ],
+  },
+  {
+    type: "Hackathon",
+    role: "Team Lead",
+    org: "Micathon",
+    date: "January 2026",
+    description:
+      "Led a team of four to a top 5 finish out of roughly 15 to 20 teams.",
+    highlights: [
+      "Led the building of Noma, an AI-powered financial dashboard for tracking sales and purchase data",
+      "Led the final presentation",
+    ],
+  },
+  {
+    type: "Hackathon",
+    role: "Team Lead",
+    org: "Hack Summer",
+    date: "July 2026",
+    description:
+      "Led a team of three to a top 8 finish out of almost 30 teams.",
+    highlights: [
+      "Led the building of Trust Gap, a website that checks whether a job posting is safe by finding the information missing from its description",
+      "Led the final presentation",
+    ],
+  },
+];
+
+const CONTACT_EMAIL = "zakriamuhmmad07@gmail.com";
+// Web3Forms access key (safe to keep in front-end code, it only allows sending to your inbox).
+const WEB3FORMS_ACCESS_KEY = "8d2ec88e-88ba-487b-adef-5b72461def96";
+
 const skills = ["Python", "C++", "AI Systems", "AI Automation", "Playwright", "Linux"];
 
 const navLinks = [
   { href: "#home", label: "Home" },
+  { href: "#experience", label: "Experience" },
   { href: "#works", label: "Projects" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
@@ -94,6 +139,7 @@ if (import.meta.env.DEV) {
 export default function MZPortfolioIntro() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [contactStatus, setContactStatus] = useState("idle");
   const introRef = useRef(null);
   const fullNameRef = useRef(null);
   const mzRef = useRef(null);
@@ -306,6 +352,51 @@ export default function MZPortfolioIntro() {
     };
   }, [selectedProject]);
 
+  // Send the contact form straight to your inbox through Web3Forms.
+  // Falls back to the visitor's email app until an access key is set.
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "");
+    const email = String(data.get("email") || "");
+    const message = String(data.get("message") || "");
+
+    if (WEB3FORMS_ACCESS_KEY === "YOUR_ACCESS_KEY_HERE") {
+      const body = `${message}\n\n${name}\n${email}`;
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        `Message from ${name} via itszaki.com`
+      )}&body=${encodeURIComponent(body)}`;
+      return;
+    }
+
+    setContactStatus("sending");
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `Message from ${name} via itszaki.com`,
+          from_name: name,
+          name,
+          email,
+          message,
+          ...(data.get("botcheck") ? { botcheck: "on" } : {}),
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        setContactStatus("sent");
+        form.reset();
+      } else {
+        setContactStatus("error");
+      }
+    } catch {
+      setContactStatus("error");
+    }
+  };
+
   // Close mobile nav whenever a link is tapped.
   const handleNavLinkClick = () => setMobileNavOpen(false);
 
@@ -456,6 +547,56 @@ export default function MZPortfolioIntro() {
           </main>
 
           <section
+            id="experience"
+            className="scroll-mt-28 border-t border-black/10 px-6 py-10 sm:px-10 lg:px-12"
+          >
+            <div className="mb-8">
+              <h3 className="text-3xl font-black tracking-[-0.05em]">
+                Beyond the Classroom
+              </h3>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              {experiences.map((item) => (
+                <div
+                  key={item.role + item.org}
+                  className="rounded-2xl border border-black/5 bg-[#faf5ea] p-6 sm:p-8"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="rounded-full border border-violet-600/40 px-3 py-1 text-xs uppercase tracking-wide text-violet-700">
+                      {item.type}
+                    </span>
+                    {item.date && (
+                      <span className="text-xs uppercase tracking-wide text-black/40">
+                        {item.date}
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="mt-5 text-2xl font-black tracking-[-0.04em] sm:text-3xl">
+                    {item.role}
+                  </h4>
+                  <p className="mt-1 text-sm font-medium uppercase tracking-wide text-black/40">
+                    {item.org}
+                  </p>
+                  <p className="mt-4 max-w-3xl text-base leading-relaxed text-black/60">
+                    {item.description}
+                  </p>
+                  {item.highlights && item.highlights.length > 0 && (
+                    <ul className="mt-4 max-w-3xl space-y-2 text-base leading-relaxed text-black/60">
+                      {item.highlights.map((point) => (
+                        <li key={point} className="flex gap-3">
+                          <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-600" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section
             id="works"
             className="scroll-mt-28 border-t border-black/10 px-6 py-8 sm:px-10 lg:px-12"
           >
@@ -596,53 +737,120 @@ export default function MZPortfolioIntro() {
             </div>
           </section>
 
-          <footer
+          <section
             id="contact"
-            className="scroll-mt-28 px-6 pb-8 sm:px-10 lg:px-12"
+            className="scroll-mt-28 grid grid-cols-1 gap-10 border-t border-black/10 px-6 py-14 sm:px-10 lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-20"
           >
-            <div className="flex flex-col gap-5 border-t border-black/10 pt-7 text-xs font-medium uppercase tracking-wide sm:flex-row sm:items-center sm:justify-between sm:text-sm">
-              <div className="flex flex-wrap gap-5">
-                <a
-                  className="group relative min-w-[170px] transition hover:opacity-100"
-                  href="mailto:zakriamuhmmad07@gmail.com"
-                >
-                  <span className="transition group-hover:opacity-0">
-                    Email ↗
-                  </span>
-                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
-                    zakriamuhmmad07
-                  </span>
-                </a>
+            <div>
+              <p className="mb-2 text-xl font-bold uppercase tracking-wide text-black">
+                Contact
+              </p>
+              <h3 className="text-4xl font-black tracking-[-0.05em] sm:text-5xl">
+                Let’s work together
+              </h3>
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-black/60">
+                If you want me to work with you, collaborate on a project, or
+                have an opportunity in mind, send me a message. I’d love to
+                hear from you.
+              </p>
 
+              <div className="mt-10 flex flex-wrap gap-4">
                 <a
-                  className="group relative min-w-[170px] transition hover:opacity-100"
+                  href={`mailto:${CONTACT_EMAIL}?subject=Let%27s%20work%20together`}
+                  className="rounded-full bg-violet-600 px-8 py-4 text-base font-bold uppercase tracking-wide text-white transition hover:bg-violet-700"
+                >
+                  Send me an email
+                </a>
+                <a
                   href="https://www.linkedin.com/in/muhammad-zakria-382640403?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="LinkedIn: Muhammad Zakria"
+                  className="group relative flex h-16 min-w-[190px] items-center justify-start text-xl font-bold uppercase tracking-wide transition hover:text-violet-600"
                 >
-                  <span className="transition group-hover:opacity-0">
-                    LinkedIn ↗
+                  <span className="transition duration-300 group-hover:-translate-x-2 group-hover:opacity-0">
+                    <svg viewBox="0 0 24 24" className="h-11 w-11" fill="currentColor" aria-hidden="true">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
                   </span>
-                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
+                  <span className="absolute inset-0 flex items-center justify-start opacity-0 transition duration-300 group-hover:opacity-100">
                     Muhammad Zakria
                   </span>
                 </a>
-
                 <a
-                  className="group relative min-w-[170px] transition hover:opacity-100"
                   href="https://github.com/Zakria774"
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="GitHub: Zakria774"
+                  className="group relative flex h-16 min-w-[190px] items-center justify-start text-xl font-bold uppercase tracking-wide transition hover:text-violet-600"
                 >
-                  <span className="transition group-hover:opacity-0">
-                    GitHub ↗
+                  <span className="transition duration-300 group-hover:-translate-x-2 group-hover:opacity-0">
+                    <svg viewBox="0 0 19 19" className="h-11 w-11" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844" />
+                    </svg>
                   </span>
-                  <span className="absolute left-0 top-0 text-violet-700 opacity-0 transition group-hover:opacity-100">
+                  <span className="absolute inset-0 flex items-center justify-start opacity-0 transition duration-300 group-hover:opacity-100">
                     Zakria774
                   </span>
                 </a>
               </div>
-              <span>Scroll to explore ↓</span>
+            </div>
+
+            <form onSubmit={handleContactSubmit} className="flex flex-col gap-4">
+              <input
+                type="checkbox"
+                name="botcheck"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+              />
+              <input
+                type="text"
+                name="name"
+                required
+                placeholder="Your name"
+                className="w-full rounded-2xl border border-black/10 bg-[#faf5ea] px-5 py-3.5 text-base text-black outline-none transition placeholder:text-black/30 focus:border-violet-600"
+              />
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="Your email"
+                className="w-full rounded-2xl border border-black/10 bg-[#faf5ea] px-5 py-3.5 text-base text-black outline-none transition placeholder:text-black/30 focus:border-violet-600"
+              />
+              <textarea
+                name="message"
+                required
+                rows={6}
+                placeholder="Your message"
+                className="w-full rounded-2xl border border-black/10 bg-[#faf5ea] px-5 py-3.5 text-base text-black outline-none transition placeholder:text-black/30 focus:border-violet-600 resize-none"
+              />
+              <button
+                type="submit"
+                disabled={contactStatus === "sending"}
+                className="self-start rounded-full bg-black px-8 py-4 text-base font-bold uppercase tracking-wide text-white transition hover:bg-violet-600 disabled:opacity-50"
+              >
+                {contactStatus === "sending" ? "Sending…" : "Send message"}
+              </button>
+              {contactStatus === "sent" && (
+                <p className="text-base text-violet-700">
+                  Message sent. Thank you, I’ll get back to you soon.
+                </p>
+              )}
+              {contactStatus === "error" && (
+                <p className="text-base text-red-600">
+                  Something went wrong. Please try again or email me directly.
+                </p>
+              )}
+            </form>
+          </section>
+
+          <footer className="px-6 pb-8 sm:px-10 lg:px-12">
+            <div className="flex flex-col gap-5 border-t border-black/10 pt-7 text-xs font-medium uppercase tracking-wide sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+              <span className="text-black/40">© M Zakria</span>
+              <a href="#home" className="transition hover:text-violet-600">
+                Back to top ↑
+              </a>
             </div>
           </footer>
 
