@@ -21,11 +21,11 @@ const Crosshair = ({ color = 'white', containerRef = null }) => {
   const filterXRef = useRef(null);
   const filterYRef = useRef(null);
 
+useEffect(() => {
   let mouse = { x: 0, y: 0 };
 
-  useEffect(() => {
-    const handleMouseMove = ev => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleMouseMove = ev => {
+     
       mouse = getMousePos(ev, containerRef?.current);
 
       if (containerRef?.current) {
